@@ -1,0 +1,342 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Democratic Trading Dashboard</title>
+  <style>
+    :root {
+      --bg: #0f131a;
+      --bg2: #1c2330;
+      --panel: rgba(17, 22, 31, 0.85);
+      --border: rgba(255, 255, 255, 0.08);
+      --text: #e6edf6;
+      --muted: #94a3b8;
+      --accent: #00d4ff;
+      --accent2: #f1c40f;
+      --shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Space Grotesk", "IBM Plex Sans", "Segoe UI", sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(1000px 700px at -10% -10%, rgba(0, 212, 255, 0.15), transparent 60%),
+        radial-gradient(900px 600px at 110% -20%, rgba(241, 196, 15, 0.12), transparent 55%),
+        linear-gradient(160deg, var(--bg), var(--bg2));
+      min-height: 100vh;
+    }
+
+    .page {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 28px 18px 60px;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    .title {
+      font-size: 28px;
+      font-weight: 700;
+      letter-spacing: 0.4px;
+    }
+
+    .subtitle {
+      color: var(--muted);
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 16px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(8px);
+      animation: rise 0.6s ease both;
+    }
+
+    .card:nth-child(1) { animation-delay: 0.05s; }
+    .card:nth-child(2) { animation-delay: 0.1s; }
+    .card:nth-child(3) { animation-delay: 0.15s; }
+    .card:nth-child(4) { animation-delay: 0.2s; }
+    .card:nth-child(5) { animation-delay: 0.25s; }
+    .card:nth-child(6) { animation-delay: 0.3s; }
+    .card:nth-child(7) { animation-delay: 0.35s; }
+
+    h2 {
+      margin: 0 0 10px 0;
+      font-size: 16px;
+      letter-spacing: 0.4px;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    pre {
+      white-space: pre-wrap;
+      word-break: break-word;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border);
+      padding: 10px;
+      border-radius: 10px;
+      color: var(--text);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+    }
+
+    td, th {
+      border-bottom: 1px solid var(--border);
+      padding: 6px;
+      text-align: left;
+      color: var(--text);
+    }
+
+    th {
+      color: var(--muted);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      font-size: 11px;
+    }
+
+    .controls {
+      display: grid;
+      gap: 10px;
+    }
+
+    .row {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    button {
+      background: linear-gradient(135deg, var(--accent), #2dd4bf);
+      color: #061018;
+      border: none;
+      padding: 8px 14px;
+      border-radius: 10px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    button.secondary {
+      background: linear-gradient(135deg, #f97316, var(--accent2));
+      color: #18120b;
+    }
+
+    input {
+      background: rgba(255, 255, 255, 0.06);
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 8px 10px;
+      width: 100%;
+    }
+
+    .status-line {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      padding: 4px 8px;
+      border-radius: 999px;
+      background: rgba(0, 212, 255, 0.15);
+      border: 1px solid rgba(0, 212, 255, 0.3);
+      font-size: 11px;
+      color: var(--accent);
+    }
+
+    @keyframes rise {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 980px) {
+      .grid { grid-template-columns: 1fr; }
+      .topbar { flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <div class="topbar">
+      <div>
+        <div class="subtitle">Democratic Intelligence</div>
+        <div class="title">Trading Command Center</div>
+      </div>
+      <span class="pill">Live</span>
+    </div>
+    <div class="grid">
+    <div class="card">
+      <h2>Stats</h2>
+      <pre id="stats">Loading...</pre>
+    </div>
+    <div class="card">
+      <h2>Controls</h2>
+      <div class="controls">
+        <div class="row">
+          <button id="btn-start">Start</button>
+          <button id="btn-stop" class="secondary">Stop</button>
+        </div>
+        <div>
+          <label>Cycle seconds</label><br/>
+          <input id="cycle-seconds" type="number" min="1" value="60" />
+        </div>
+        <div>
+          <label>Timeframes (comma)</label><br/>
+          <input id="cycle-timeframes" type="text" value="5s,30s,1m,5m,15m" />
+        </div>
+        <button id="btn-apply">Apply</button>
+        <div id="status-line" class="status-line"></div>
+        <pre id="status">Loading...</pre>
+      </div>
+    </div>
+    <div class="card">
+      <h2>System Metrics</h2>
+      <table id="metrics"></table>
+    </div>
+    <div class="card">
+      <h2>Top Experts (Weights)</h2>
+      <table id="experts"></table>
+    </div>
+    <div class="card">
+      <h2>Recent Predictions</h2>
+      <table id="preds"></table>
+    </div>
+    <div class="card">
+      <h2>Recent Model Calls</h2>
+      <table id="calls"></table>
+    </div>
+    <div class="card">
+      <h2>Recent Trades</h2>
+      <table id="trades"></table>
+    </div>
+    </div>
+  </div>
+
+<script>
+async function j(url){ return (await fetch(url)).json(); }
+
+function table(el, headers, rows){
+  el.innerHTML = "";
+  const thead = document.createElement("tr");
+  headers.forEach(h=>{ const th=document.createElement("th"); th.textContent=h; thead.appendChild(th); });
+  el.appendChild(thead);
+  rows.forEach(r=>{
+    const tr=document.createElement("tr");
+    r.forEach(v=>{ const td=document.createElement("td"); td.textContent=v; tr.appendChild(td); });
+    el.appendChild(tr);
+  });
+}
+
+async function refresh(){
+  const stats = await j("/api/stats");
+  document.getElementById("stats").textContent = JSON.stringify(stats, null, 2);
+
+  const status = await j("/status");
+  document.getElementById("status").textContent = JSON.stringify(status, null, 2);
+  const statusLine = document.getElementById("status-line");
+  const running = status.running ? "RUNNING" : "STOPPED";
+  const tf = status.last_timeframe || "-";
+  const invalid = (status.invalid_timeframes || []).join(", ");
+  statusLine.textContent = `State: ${running} | Last TF: ${tf}` + (invalid ? ` | Invalid TFs: ${invalid}` : "");
+  if (status.cycle_seconds) {
+    document.getElementById("cycle-seconds").value = status.cycle_seconds;
+  }
+  if (status.cycle_timeframes) {
+    document.getElementById("cycle-timeframes").value = status.cycle_timeframes.join(",");
+  }
+
+  const experts = await j("/api/experts/leaderboard");
+  table(document.getElementById("experts"),
+        ["expert","ema","w","n"],
+        experts.slice(0,15).map(x=>[x.expert, x.ema_score, x.weight, x.samples]));
+
+  const metrics = await j("/api/system/metrics");
+  table(document.getElementById("metrics"),
+        ["time","ms","assets","news","picks","eval","traded","memMB","cpu%"],
+        metrics.slice(0,15).map(x=>[
+          x.timestamp.split("T")[1] || x.timestamp,
+          x.cycle_ms, x.assets_count, x.news_count,
+          x.picks_stored, x.evaluated_count, x.traded,
+          x.memory_mb ? x.memory_mb.toFixed(1) : "",
+          x.cpu_pct ? x.cpu_pct.toFixed(1) : ""
+        ]));
+
+  const preds = await j("/api/predictions/recent");
+  table(document.getElementById("preds"),
+        ["time","asset","tf","dir","conf","exp%","score","model/style"],
+        preds.slice(0,25).map(x=>[
+          x.timestamp.split("T")[1] || x.timestamp,
+          x.asset, x.timeframe, x.direction,
+          x.confidence, x.expected_change_percent,
+          x.score === null ? "" : x.score,
+          (x.model + " / " + x.thinking_style).slice(0,60)
+        ]));
+
+  const calls = await j("/api/calls/recent");
+  table(document.getElementById("calls"),
+        ["time","prov","model","ok","ms","err"],
+        calls.slice(0,25).map(x=>[
+          x.timestamp.split("T")[1] || x.timestamp,
+          x.provider, (x.model||"").slice(0,20),
+          x.ok, x.latency_ms, (x.error||"").slice(0,40)
+        ]));
+
+  const trades = await j("/api/trades/recent");
+  table(document.getElementById("trades"),
+        ["time","asset","action","qty","price","stop"],
+        trades.slice(0,25).map(x=>[
+          x.timestamp.split("T")[1] || x.timestamp,
+          x.asset, x.action, x.quantity, x.price, x.stop_loss
+        ]));
+}
+
+document.getElementById("btn-start").addEventListener("click", async () => {
+  await fetch("/start", { method: "POST" });
+  refresh();
+});
+document.getElementById("btn-stop").addEventListener("click", async () => {
+  await fetch("/stop", { method: "POST" });
+  refresh();
+});
+document.getElementById("btn-apply").addEventListener("click", async () => {
+  const cycleSeconds = document.getElementById("cycle-seconds").value;
+  const timeframes = document.getElementById("cycle-timeframes").value;
+  await fetch("/config", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ cycle_seconds: cycleSeconds, timeframes })
+  });
+  refresh();
+});
+
+refresh();
+setInterval(refresh, 3000);
+</script>
+</body>
+</html>
